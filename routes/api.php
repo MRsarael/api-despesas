@@ -4,16 +4,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/user')->group(function () {
-    Route::post('/new', 'User\UserController@newUser');
-    Route::post('/login', 'AuthController@login');
+    Route::post('/login', 'AuthController@login')->name('user.login');
+    Route::get('/login', 'AuthController@verifyLogin')->name('login');
+    Route::post('/new', 'User\UserController@newUser')->name('user.new');
 
-    // Route::group(['middleware' => ['auth:api']], function () {
-    //     Route::post('/logout', 'AuthController@logout');
-    //     Route::post('/refresh', 'AuthController@refresh');
-    //     Route::post('/me', 'AuthController@me');
-    // });
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::post('/me', 'AuthController@me');
+        Route::post('/logout', 'AuthController@logout');
+        Route::post('/refresh', 'AuthController@refresh');
+    });
 });
 
-Route::prefix('/expenses')->group(function () {
-    Route::get('/', 'Expenses\ExpensesController@all');
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::prefix('/expenses')->group(function () {
+        Route::get('/', 'Expenses\ExpensesController@all');
+    });
 });
+

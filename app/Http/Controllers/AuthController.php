@@ -30,22 +30,28 @@ class AuthController extends Controller
      */
     public function login()
     {
+        $response = ['response' => [], 'error' => false, 'message' => 'Success'];
+        $code = 200;
+
         try {
-            $credentials = [
-                'email'    => $this->request->get('email'),
-                'password' => $this->request->get('password')
-            ];
-    
-            $token = $this->service->execute($credentials);
-    
-            return response()->json($token, 200);
+            $response['response'] = $this->service->execute($this->request->all());
         } catch (\Exception $e) {
-            return response()->json([
-                'response' => [],
-                'error'    => true,
-                'message'  => $e->getMessage()
-            ], $e->getCode() ? $e->getCode() : 500);
+            $response['error'] = true;
+            $response['message'] = $e->getMessage();
+            $code = $e->getCode() ? $e->getCode() : 404;
         }
+
+        return response()->json($response, $code);
+    }
+
+    /**
+     * Check if the user is logged in.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verifyLogin()
+    {
+        return $this->login();
     }
 
     /**
@@ -55,7 +61,18 @@ class AuthController extends Controller
      */
     public function me()
     {
-        //...
+        $response = ['response' => [], 'error' => false, 'message' => 'Success'];
+        $code = 200;
+
+        try {
+            $response['response'] = auth()->user();
+        } catch (\Exception $e) {
+            $response['error'] = true;
+            $response['message'] = $e->getMessage();
+            $code = $e->getCode() ? $e->getCode() : 404;
+        }
+
+        return response()->json($response, $code);
     }
 
     /**
@@ -65,7 +82,18 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        //...
+        $response = ['response' => [], 'error' => false, 'message' => 'Successfully logged out'];
+        $code = 200;
+
+        try {
+            $this->service->logout();
+        } catch (\Exception $e) {
+            $response['error'] = true;
+            $response['message'] = $e->getMessage();
+            $code = $e->getCode() ? $e->getCode() : 404;
+        }
+
+        return response()->json($response, $code);
     }
 
     /**
@@ -75,6 +103,17 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        //...
+        $response = ['response' => [], 'error' => false, 'message' => 'Success'];
+        $code = 200;
+
+        try {
+            $response['response'] = $this->service->refresh();
+        } catch (\Exception $e) {
+            $response['error'] = true;
+            $response['message'] = $e->getMessage();
+            $code = $e->getCode() ? $e->getCode() : 404;
+        }
+
+        return response()->json($response, $code);
     }
 }

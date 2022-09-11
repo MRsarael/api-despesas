@@ -2,7 +2,12 @@
 
 namespace App\Services\Auth;
 
+use App\FormRequests\Auth\LoginFormRequest;
+
+use App\Utils\Util;
+use Carbon\Carbon;
 use Exception;
+use Validator;
 
 class LoginService
 {
@@ -10,16 +15,53 @@ class LoginService
     {
         //...
     }
-
-    public function execute(array $credentials)
+    
+    /**
+     * Initialize user token.
+     *
+     * @return Array
+     */
+    public function execute(array $requestData)
     {
-        $token = auth()->setTTL(6*60)->attempt($credentials);
-        
-        if(!$token) {
-            throw new Exception("Not authorized", 401);
+        $validator = Validator::make($requestData, (new LoginFormRequest)->rules());
+
+        if ($validator->fails()) {
+            throw new Exception(Util::convertMessageErrorFormRequest($validator->errors()->messages()));
         }
 
+        $credentials = [
+            'password' => $requestData['password'],
+            'email'    => $requestData['email']
+        ];
+
+        $token = auth()->setTTL(6*60)->attempt($credentials);
+
+        if(!$token) throw new Exception("Not authorized", 401);
+
         return $this->respondWithToken($token);
+    }
+
+    /**
+     * Log the user out.
+     *
+     * @return Bool
+     */
+    public function logout()
+    {
+        auth()->logout();
+        return true;
+    }
+
+    /**
+     * Refresh token user logged.
+     *
+     * @param  string $token
+     *
+     * @return Array
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(auth()->refresh());
     }
 
     /**

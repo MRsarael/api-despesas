@@ -1,11 +1,11 @@
 <?php
 
-namespace App\FormRequests\User;
+namespace App\FormRequests\Auth;
 
 use App\Rules\EmailValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class NewUserFormRequest extends FormRequest
+class LoginFormRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,7 +16,6 @@ class NewUserFormRequest extends FormRequest
     {
         return [
             'email'    => [new EmailValidation()],
-            'name'     => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'max:255'],
         ];
     }
