@@ -9,6 +9,8 @@ use App\FormRequests\Expenses\UpdateFormRequest;
 
 use Illuminate\Support\Facades\Crypt;
 
+use App\Events\StoreExpense;
+
 use App\Utils\Util;
 use Carbon\Carbon;
 use Exception;
@@ -71,6 +73,8 @@ class ExpensesService
             $storeData['valueExpense']
         );
 
+        event(new StoreExpense(auth()->user(), $expense));
+        
         return [
             'expenseId'          => base64_encode($expense->id),
             'descriptionExpense' => $expense->description,

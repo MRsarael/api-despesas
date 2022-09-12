@@ -1,15 +1,19 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-## About Laravel
+## Sobre o projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+API de um CRUD de despesas pessoais com autenticação via JWT.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Passos para configurar o projeto para teste
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- git clone https://github.com/MRsarael/api-despesas.git
+- composer install
+- php artisan key:generate
+- php artisan jwt:secret
+- composer dump-autoload
+- OBS: Será necessário criar um banco de dados Mysql e configurar o acesso no arquivo .env
+- php artisan migrate
+
+## Link collection Postman
+
+<p>https://www.postman.com/collections/38db7d75059b055d9577</p>
