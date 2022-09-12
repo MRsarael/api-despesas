@@ -38,7 +38,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             $response['error'] = true;
             $response['message'] = $e->getMessage();
-            $code = 400;
+            $code = 404;
         }
 
         return response()->json($response, $code);

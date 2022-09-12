@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\Auth\LoginService;
+use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
@@ -17,9 +17,9 @@ class AuthController extends Controller
      *
      * @return void
      */
-    public function __construct(LoginService $loginService, Request $request)
+    public function __construct(AuthService $authService, Request $request)
     {
-        $this->service = $loginService;
+        $this->service = $authService;
         $this->request = $request;
     }
 
@@ -51,7 +51,9 @@ class AuthController extends Controller
      */
     public function verifyLogin()
     {
-        return $this->login();
+        $response = ['response' => [], 'error' => true, 'message' => 'Successfully logged out'];
+        return response()->json($response, 401);
+        // return $this->login();
     }
 
     /**
@@ -65,7 +67,7 @@ class AuthController extends Controller
         $code = 200;
 
         try {
-            $response['response'] = auth()->user();
+            $response['response'] = $this->service->getUserLogged();
         } catch (\Exception $e) {
             $response['error'] = true;
             $response['message'] = $e->getMessage();

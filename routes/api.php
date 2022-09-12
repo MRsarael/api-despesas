@@ -17,7 +17,11 @@ Route::prefix('/user')->group(function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::prefix('/expenses')->group(function () {
-        Route::get('/', 'Expenses\ExpensesController@all');
+        Route::post('/', 'Expenses\ExpensesController@store');
+        Route::get('/', 'Expenses\ExpensesController@index');
+        Route::get('/{expenseId}', 'Expenses\ExpensesController@show');
+        Route::put('/', 'Expenses\ExpensesController@update');
+        Route::delete('/{expenseId}', 'Expenses\ExpensesController@destroy');
     });
 });
 

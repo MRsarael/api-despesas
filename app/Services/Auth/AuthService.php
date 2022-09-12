@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use Exception;
 use Validator;
 
-class LoginService
+class AuthService
 {
     public function __construct()
     {
@@ -65,6 +65,26 @@ class LoginService
     }
 
     /**
+     * return data of user logged.
+     *
+     * @param  string $token
+     *
+     * @return Array
+     */
+    public function getUserLogged()
+    {
+        $user = auth()->user();
+
+        if($user != null && $user->count()) {
+            $user = $user->toArray();
+            $user['id'] = bcrypt($user['id']);
+            return $user;
+        }
+
+        throw new Exception("User logged out");
+    }
+
+    /**
      * Get the token array structure.
      *
      * @param  string $token
@@ -77,7 +97,7 @@ class LoginService
             'access_token' => $token,
             'token_type'   => 'Bearer',
             'expires_in'   => auth()->factory()->getTTL(),
-            'user'         => auth()->user()
+            'user'         => $this->getUserLogged()
         ];
     }
 }
